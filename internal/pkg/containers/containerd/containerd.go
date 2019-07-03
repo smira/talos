@@ -12,10 +12,12 @@ import (
 	"strings"
 	"syscall"
 
+	"github.com/containerd/cgroups"
 	"github.com/containerd/containerd"
 	tasks "github.com/containerd/containerd/api/services/tasks/v1"
 	"github.com/containerd/containerd/errdefs"
 	"github.com/containerd/containerd/namespaces"
+	"github.com/containerd/typeurl"
 	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
 
@@ -129,7 +131,29 @@ func (i *inspector) containerInfo(cntr containerd.Container, imageList map[strin
 		if err != nil {
 			return nil, errors.Wrapf(err, "error pulling metrics for %q", cntr.ID())
 		}
-		cp.Metrics = metrics
+
+		anydata, err := typeurl.UnmarshalAny(metrics.Data)
+		if err != nil {
+			return nil, errors.Wrapf(err, "error unmarshalling metrics for %q", cntr.ID())
+		}
+
+		data, ok := anydata.(*cgroups.Metrics)
+		if !ok {
+			return nil, errors.New("failed to convert metric data to cgroups.Metrics")
+		}
+
+		var used uint64
+		mem := data.Memory
+		if mem.Usage != nil {
+			if mem.TotalInactiveFile < mem.Usage.Usage {
+				used = mem.Usage.Usage - mem.TotalInactiveFile
+			}
+		}
+
+		cp.Metrics = &ctrs.ContainerMetrics{
+			MemoryUsage: used,
+			CPUUsage:    data.CPU.Usage.Total,
+		}
 	}
 
 	// Save off an identifier for the pod
