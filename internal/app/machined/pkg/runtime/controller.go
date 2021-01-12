@@ -51,4 +51,10 @@ type Controller interface {
 	Runtime() Runtime
 	Sequencer() Sequencer
 	Run(Sequence, interface{}, ...ControllerOption) error
+	V2() V2Controller
+}
+
+// V2Controller provides glue into v2alpha1 controller runtime.
+type V2Controller interface {
+	Run(context.Context) error
 }
