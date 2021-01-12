@@ -8,6 +8,8 @@ replace (
 	github.com/talos-systems/talos/pkg/machinery => ./pkg/machinery
 )
 
+replace github.com/talos-systems/os-runtime => github.com/smira/os-runtime v0.0.0-20210115201639-041b903c99ba
+
 require (
 	github.com/BurntSushi/toml v0.3.1
 	github.com/Microsoft/hcsshim v0.8.10 // indirect

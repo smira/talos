@@ -2,6 +2,8 @@ module github.com/talos-systems/talos/pkg/machinery
 
 go 1.14
 
+replace github.com/talos-systems/os-runtime => github.com/smira/os-runtime v0.0.0-20210115201639-041b903c99ba
+
 require (
 	github.com/asaskevich/govalidator v0.0.0-20200907205600-7a23bdc65eef
 	github.com/containerd/containerd v1.3.6

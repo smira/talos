@@ -851,6 +851,8 @@ github.com/smartystreets/goconvey v1.6.4 h1:fv0U8FUIMPNf1L9lnHLvLhgicrIVChEkdzIK
 github.com/smartystreets/goconvey v1.6.4/go.mod h1:syvi0/a8iFYH4r/RixwvyeAJjdLS9QV7WQ/tjFTllLA=
 github.com/smira/go-xz v0.0.0-20201019130106-9921ed7a9935 h1:64eGQ94st1udqkO66IaMG05KGThUJcXHqyE6UeKQBoE=
 github.com/smira/go-xz v0.0.0-20201019130106-9921ed7a9935/go.mod h1:smSuTvETRIkX95VAIWBdKoGJuUxif7NT7FgbkpVqOiA=
+github.com/smira/os-runtime v0.0.0-20210115201639-041b903c99ba h1:1mICwjNreAii7i04JxhvE63LKFqBLIR3b9ZnDW9X3mg=
+github.com/smira/os-runtime v0.0.0-20210115201639-041b903c99ba/go.mod h1:pQ8E1nmr8SODM9TD9HXH5HlzgyfyeCO8yug4x6fDKlQ=
 github.com/soheilhy/cmux v0.1.4 h1:0HKaf1o97UwFjHH9o5XsHUOF+tqmdA7KEzXLpiyaw0E=
 github.com/soheilhy/cmux v0.1.4/go.mod h1:IM3LyeVVIOuxMH7sFAkER9+bJ4dT7Ms6E4xg4kGIyLM=
 github.com/spaolacci/murmur3 v0.0.0-20180118202830-f09979ecbc72/go.mod h1:JwIasOWyU6f++ZhiEuf87xNszmSA2myDM2Kzu9HwQUA=
