@@ -205,11 +205,6 @@ func (ctrl *ControlPlaneStaticPodController) manageAPIServer(ctx context.Context
 						},
 						VolumeMounts: []v1.VolumeMount{
 							{
-								Name:      "ssl-certs",
-								MountPath: "/etc/ssl/certs",
-								ReadOnly:  true,
-							},
-							{
 								Name:      "secrets",
 								MountPath: "/etc/kubernetes/secrets",
 								ReadOnly:  true,
@@ -223,14 +218,6 @@ func (ctrl *ControlPlaneStaticPodController) manageAPIServer(ctx context.Context
 					RunAsUser:    pointer.ToInt64(65534),
 				},
 				Volumes: []v1.Volume{
-					{
-						Name: "ssl-certs",
-						VolumeSource: v1.VolumeSource{
-							HostPath: &v1.HostPathVolumeSource{
-								Path: "/etc/ssl/certs",
-							},
-						},
-					},
 					{
 						Name: "secrets",
 						VolumeSource: v1.VolumeSource{

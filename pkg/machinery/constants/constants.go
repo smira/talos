@@ -180,6 +180,10 @@ const (
 	// KubernetesAdminCertDefaultLifetime defines default lifetime for Kubernetes generated admin certificate.
 	KubernetesAdminCertDefaultLifetime = 365 * 24 * time.Hour
 
+	KubebernetesStaticSecretsDir = "/system/secrets/kubernetes"
+
+	KubernetesAPIServerSecretsDir = KubebernetesStaticSecretsDir + "/" + "kube-apiserver"
+
 	// KubeletBootstrapKubeconfig is the path to the kubeconfig required to
 	// bootstrap the kubelet.
 	KubeletBootstrapKubeconfig = "/etc/kubernetes/bootstrap-kubeconfig"
