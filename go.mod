@@ -11,6 +11,7 @@ replace (
 replace github.com/talos-systems/os-runtime => github.com/smira/os-runtime v0.0.0-20210115201639-041b903c99ba
 
 require (
+	github.com/AlekSi/pointer v1.1.0
 	github.com/BurntSushi/toml v0.3.1
 	github.com/Microsoft/hcsshim v0.8.10 // indirect
 	github.com/Microsoft/hcsshim/test v0.0.0-20201124231931-de74fe8b94ae // indirect

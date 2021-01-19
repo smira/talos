@@ -14,6 +14,7 @@ import (
 	"github.com/talos-systems/os-runtime/pkg/state/registry"
 
 	"github.com/talos-systems/talos/internal/app/machined/pkg/resources/config"
+	"github.com/talos-systems/talos/internal/app/machined/pkg/resources/k8s"
 	"github.com/talos-systems/talos/internal/app/machined/pkg/resources/legacy"
 	talosconfig "github.com/talos-systems/talos/pkg/machinery/config"
 )
@@ -53,10 +54,18 @@ func NewState() (*State, error) {
 		return nil, err
 	}
 
+	if err := s.namespaceRegistry.Register(ctx, k8s.ControlPlaneNamespaceName, "Kubernetes control plane resources.", false); err != nil {
+		return nil, err
+	}
+
 	// register Talos resources
 	for _, r := range []resource.Resource{
 		&legacy.Service{},
 		&config.V1Alpha1{},
+		&config.MachineType{},
+		&config.K8sControlPlane{},
+		&k8s.StaticPod{},
+		&k8s.StaticPodStatus{},
 	} {
 		if err := s.resourceRegistry.Register(ctx, r); err != nil {
 			return nil, err

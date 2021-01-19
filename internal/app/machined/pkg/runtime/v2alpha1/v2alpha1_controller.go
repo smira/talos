@@ -11,6 +11,8 @@ import (
 	"github.com/talos-systems/os-runtime/pkg/controller"
 	osruntime "github.com/talos-systems/os-runtime/pkg/controller/runtime"
 
+	"github.com/talos-systems/talos/internal/app/machined/pkg/controllers/config"
+	"github.com/talos-systems/talos/internal/app/machined/pkg/controllers/k8s"
 	"github.com/talos-systems/talos/internal/app/machined/pkg/controllers/legacy"
 	"github.com/talos-systems/talos/internal/app/machined/pkg/runtime"
 )
@@ -46,6 +48,10 @@ func (ctrl *Controller) Run(ctx context.Context) error {
 		&legacy.ServiceController{
 			LegacyEvents: ctrl.legacyRuntime.Events(),
 		},
+		&config.MachineTypeController{},
+		&config.K8sControlPlaneController{},
+		&k8s.ControlPlaneStaticPodController{},
+		&k8s.KubeletStaticPodController{},
 	} {
 		if err := ctrl.controllerRuntime.RegisterController(c); err != nil {
 			return err

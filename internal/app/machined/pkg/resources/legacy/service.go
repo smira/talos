@@ -73,3 +73,8 @@ func (r *Service) ResourceDefinition() core.ResourceDefinitionSpec {
 func (r *Service) SetRunning(running bool) {
 	r.spec.Running = true
 }
+
+// Running returns .spec.running.
+func (r *Service) Running() bool {
+	return r.spec.Running
+}
