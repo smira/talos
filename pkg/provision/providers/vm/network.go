@@ -160,8 +160,8 @@ const bridgeTemplate = `
 	"ipMasq": true,
 	"isGateway": true,
 	"isDefaultGateway": true,
-	"hairpinMode": false,
-	"promiscMode": true,
+	"hairpinMode": true,
+	"promiscMode": false,
 	"ipam": {
 		  "type": "static"
 	},
@@ -180,8 +180,8 @@ const networkTemplate = `
 			"ipMasq": true,
 			"isGateway": true,
 			"isDefaultGateway": true,
-			"hairpinMode": false,
-			"promiscMode": true,
+			"hairpinMode": true,
+			"promiscMode": false,
 			"ipam": {
 				"type": "static"
 			},
