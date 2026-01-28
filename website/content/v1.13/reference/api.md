@@ -42,6 +42,28 @@ description: Talos gRPC API reference.
   
     - [InspectService](#inspect.InspectService)
   
+- [machine/debug.proto](#machine/debug.proto)
+    - [DebugContainerRunRequest](#machine.DebugContainerRunRequest)
+    - [DebugContainerRunResponse](#machine.DebugContainerRunResponse)
+    - [DebugContainerTerminalResize](#machine.DebugContainerTerminalResize)
+  
+    - [DebugService](#machine.DebugService)
+  
+- [machine/image.proto](#machine/image.proto)
+    - [ContainerdInstance](#machine.ContainerdInstance)
+    - [ImageServiceImportRequest](#machine.ImageServiceImportRequest)
+    - [ImageServiceImportResponse](#machine.ImageServiceImportResponse)
+    - [ImageServiceListRequest](#machine.ImageServiceListRequest)
+    - [ImageServiceListResponse](#machine.ImageServiceListResponse)
+    - [ImageServicePullLayerProgress](#machine.ImageServicePullLayerProgress)
+    - [ImageServicePullProgress](#machine.ImageServicePullProgress)
+    - [ImageServicePullRequest](#machine.ImageServicePullRequest)
+    - [ImageServicePullResponse](#machine.ImageServicePullResponse)
+  
+    - [ImageServicePullLayerProgress.Status](#machine.ImageServicePullLayerProgress.Status)
+  
+    - [ImageService](#machine.ImageService)
+  
 - [machine/machine.proto](#machine/machine.proto)
     - [AddressEvent](#machine.AddressEvent)
     - [ApplyConfiguration](#machine.ApplyConfiguration)
@@ -72,15 +94,6 @@ description: Talos gRPC API reference.
     - [ControlPlaneConfig](#machine.ControlPlaneConfig)
     - [CopyRequest](#machine.CopyRequest)
     - [DHCPOptionsConfig](#machine.DHCPOptionsConfig)
-    - [DebugContainerCreateRequest](#machine.DebugContainerCreateRequest)
-    - [DebugContainerCreateResponse](#machine.DebugContainerCreateResponse)
-    - [DebugContainerPullProgress](#machine.DebugContainerPullProgress)
-    - [DebugContainerPullProgressStatus](#machine.DebugContainerPullProgressStatus)
-    - [DebugContainerRunRequest](#machine.DebugContainerRunRequest)
-    - [DebugContainerRunResponse](#machine.DebugContainerRunResponse)
-    - [DebugContainerSpec](#machine.DebugContainerSpec)
-    - [DebugContainerSpec.EnvEntry](#machine.DebugContainerSpec.EnvEntry)
-    - [DebugContainerTerminalResize](#machine.DebugContainerTerminalResize)
     - [DiskStat](#machine.DiskStat)
     - [DiskStats](#machine.DiskStats)
     - [DiskStatsResponse](#machine.DiskStatsResponse)
@@ -234,7 +247,6 @@ description: Talos gRPC API reference.
     - [ApplyConfigurationRequest.Mode](#machine.ApplyConfigurationRequest.Mode)
     - [ConnectRecord.State](#machine.ConnectRecord.State)
     - [ConnectRecord.TimerActive](#machine.ConnectRecord.TimerActive)
-    - [DebugContainerPullProgressStatus.Status](#machine.DebugContainerPullProgressStatus.Status)
     - [EtcdMemberAlarm.AlarmType](#machine.EtcdMemberAlarm.AlarmType)
     - [ListRequest.Type](#machine.ListRequest.Type)
     - [MachineConfig.MachineType](#machine.MachineConfig.MachineType)
@@ -1044,6 +1056,271 @@ InspectService provides auxiliary API to inspect OS internals.
 
 
 
+<a name="machine/debug.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## machine/debug.proto
+
+
+
+<a name="machine.DebugContainerRunRequest"></a>
+
+### DebugContainerRunRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| image_name | [string](#string) |  |  |
+| stdin_data | [bytes](#bytes) |  |  |
+| signal | [int32](#int32) |  |  |
+| term_resize | [DebugContainerTerminalResize](#machine.DebugContainerTerminalResize) |  |  |
+
+
+
+
+
+
+<a name="machine.DebugContainerRunResponse"></a>
+
+### DebugContainerRunResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| stdout_data | [bytes](#bytes) |  |  |
+| exit_code | [int32](#int32) |  |  |
+
+
+
+
+
+
+<a name="machine.DebugContainerTerminalResize"></a>
+
+### DebugContainerTerminalResize
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| width | [int32](#int32) |  |  |
+| height | [int32](#int32) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+
+<a name="machine.DebugService"></a>
+
+### DebugService
+DebugService provides debugging and inspection capabilities for a Talos node.
+
+| Method Name | Request Type | Response Type | Description |
+| ----------- | ------------ | ------------- | ------------|
+| ContainerRun | [DebugContainerRunRequest](#machine.DebugContainerRunRequest) stream | [DebugContainerRunResponse](#machine.DebugContainerRunResponse) stream | ContainerRun runs a debug container, attaches to it, and streams I/O. |
+
+ <!-- end services -->
+
+
+
+<a name="machine/image.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## machine/image.proto
+
+
+
+<a name="machine.ContainerdInstance"></a>
+
+### ContainerdInstance
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| driver | [common.ContainerDriver](#common.ContainerDriver) |  | Containerd instance to use. |
+| namespace | [common.ContainerdNamespace](#common.ContainerdNamespace) |  | Containerd namespace to use. |
+
+
+
+
+
+
+<a name="machine.ImageServiceImportRequest"></a>
+
+### ImageServiceImportRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| containerd | [ContainerdInstance](#machine.ContainerdInstance) |  | Containerd instance to use. |
+| image_chunk | [common.Data](#common.Data) |  | Chunk of the image tarball. |
+
+
+
+
+
+
+<a name="machine.ImageServiceImportResponse"></a>
+
+### ImageServiceImportResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| name | [string](#string) |  | Name of the imported image. |
+
+
+
+
+
+
+<a name="machine.ImageServiceListRequest"></a>
+
+### ImageServiceListRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| containerd | [ContainerdInstance](#machine.ContainerdInstance) |  |  |
+
+
+
+
+
+
+<a name="machine.ImageServiceListResponse"></a>
+
+### ImageServiceListResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| name | [string](#string) |  |  |
+| digest | [string](#string) |  |  |
+| size | [int64](#int64) |  |  |
+| created_at | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  |  |
+
+
+
+
+
+
+<a name="machine.ImageServicePullLayerProgress"></a>
+
+### ImageServicePullLayerProgress
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| status | [ImageServicePullLayerProgress.Status](#machine.ImageServicePullLayerProgress.Status) |  |  |
+| elapsed | [google.protobuf.Duration](#google.protobuf.Duration) |  |  |
+| offset | [int64](#int64) |  |  |
+| total | [int64](#int64) |  |  |
+
+
+
+
+
+
+<a name="machine.ImageServicePullProgress"></a>
+
+### ImageServicePullProgress
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| layer_id | [string](#string) |  |  |
+| progress | [ImageServicePullLayerProgress](#machine.ImageServicePullLayerProgress) |  |  |
+
+
+
+
+
+
+<a name="machine.ImageServicePullRequest"></a>
+
+### ImageServicePullRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| containerd | [ContainerdInstance](#machine.ContainerdInstance) |  |  |
+| image_ref | [string](#string) |  | Image reference to pull. |
+
+
+
+
+
+
+<a name="machine.ImageServicePullResponse"></a>
+
+### ImageServicePullResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| name | [string](#string) |  | Name of the pulled image (when done). |
+| pull_progress | [ImageServicePullProgress](#machine.ImageServicePullProgress) |  | Progress of the image pull (intermediate updates). |
+
+
+
+
+
+ <!-- end messages -->
+
+
+<a name="machine.ImageServicePullLayerProgress.Status"></a>
+
+### ImageServicePullLayerProgress.Status
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| DOWNLOADING | 0 | Keep this in sync with ImagePullLayerProgress.Status. |
+| DOWNLOAD_COMPLETE | 1 |  |
+| EXTRACTING | 2 |  |
+| EXTRACT_COMPLETE | 3 |  |
+| ALREADY_EXISTS | 4 |  |
+
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+
+<a name="machine.ImageService"></a>
+
+### ImageService
+The machine service definition.
+
+| Method Name | Request Type | Response Type | Description |
+| ----------- | ------------ | ------------- | ------------|
+| List | [ImageServiceListRequest](#machine.ImageServiceListRequest) | [ImageServiceListResponse](#machine.ImageServiceListResponse) stream | List images in the containerd. |
+| Pull | [ImageServicePullRequest](#machine.ImageServicePullRequest) | [ImageServicePullResponse](#machine.ImageServicePullResponse) stream | Pull an image into the containerd. |
+| Import | [ImageServiceImportRequest](#machine.ImageServiceImportRequest) stream | [ImageServiceImportResponse](#machine.ImageServiceImportResponse) | Import an image from a stream (tarball). |
+
+ <!-- end services -->
+
+
+
 <a name="machine/machine.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -1568,153 +1845,6 @@ Copy produces .tar.gz archive which is streamed back to the caller
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | route_metric | [uint32](#uint32) |  |  |
-
-
-
-
-
-
-<a name="machine.DebugContainerCreateRequest"></a>
-
-### DebugContainerCreateRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| spec | [DebugContainerSpec](#machine.DebugContainerSpec) |  |  |
-| image_chunk | [common.Data](#common.Data) |  |  |
-
-
-
-
-
-
-<a name="machine.DebugContainerCreateResponse"></a>
-
-### DebugContainerCreateResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| pull_progress | [DebugContainerPullProgress](#machine.DebugContainerPullProgress) |  |  |
-| container_id | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="machine.DebugContainerPullProgress"></a>
-
-### DebugContainerPullProgress
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| layer_id | [string](#string) |  |  |
-| progress_status | [DebugContainerPullProgressStatus](#machine.DebugContainerPullProgressStatus) |  |  |
-
-
-
-
-
-
-<a name="machine.DebugContainerPullProgressStatus"></a>
-
-### DebugContainerPullProgressStatus
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| status | [DebugContainerPullProgressStatus.Status](#machine.DebugContainerPullProgressStatus.Status) |  |  |
-| progress | [double](#double) |  |  |
-
-
-
-
-
-
-<a name="machine.DebugContainerRunRequest"></a>
-
-### DebugContainerRunRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| container_id | [string](#string) |  |  |
-| stdin_data | [bytes](#bytes) |  |  |
-| signal | [int32](#int32) |  |  |
-| term_resize | [DebugContainerTerminalResize](#machine.DebugContainerTerminalResize) |  |  |
-
-
-
-
-
-
-<a name="machine.DebugContainerRunResponse"></a>
-
-### DebugContainerRunResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| stdout_data | [bytes](#bytes) |  |  |
-| exit_code | [int32](#int32) |  |  |
-
-
-
-
-
-
-<a name="machine.DebugContainerSpec"></a>
-
-### DebugContainerSpec
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| image_ref | [string](#string) |  |  |
-| args | [string](#string) | repeated |  |
-| env | [DebugContainerSpec.EnvEntry](#machine.DebugContainerSpec.EnvEntry) | repeated |  |
-
-
-
-
-
-
-<a name="machine.DebugContainerSpec.EnvEntry"></a>
-
-### DebugContainerSpec.EnvEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| key | [string](#string) |  |  |
-| value | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="machine.DebugContainerTerminalResize"></a>
-
-### DebugContainerTerminalResize
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| width | [int32](#int32) |  |  |
-| height | [int32](#int32) |  |  |
 
 
 
@@ -4268,21 +4398,6 @@ rpc upgrade
 
 
 
-<a name="machine.DebugContainerPullProgressStatus.Status"></a>
-
-### DebugContainerPullProgressStatus.Status
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| DOWNLOADING | 0 |  |
-| DOWNLOAD_COMPLETE | 1 |  |
-| EXTRACTING | 2 |  |
-| EXTRACT_COMPLETE | 3 |  |
-| ALREADY_EXISTS | 4 |  |
-
-
-
 <a name="machine.EtcdMemberAlarm.AlarmType"></a>
 
 ### EtcdMemberAlarm.AlarmType
@@ -4512,10 +4627,12 @@ The machine service definition.
 | Netstat | [NetstatRequest](#machine.NetstatRequest) | [NetstatResponse](#machine.NetstatResponse) | Netstat provides information about network connections. |
 | MetaWrite | [MetaWriteRequest](#machine.MetaWriteRequest) | [MetaWriteResponse](#machine.MetaWriteResponse) | MetaWrite writes a META key-value pair. |
 | MetaDelete | [MetaDeleteRequest](#machine.MetaDeleteRequest) | [MetaDeleteResponse](#machine.MetaDeleteResponse) | MetaDelete deletes a META key. |
-| ImageList | [ImageListRequest](#machine.ImageListRequest) | [ImageListResponse](#machine.ImageListResponse) stream | ImageList lists images in the CRI. |
-| ImagePull | [ImagePullRequest](#machine.ImagePullRequest) | [ImagePullResponse](#machine.ImagePullResponse) | ImagePull pulls an image into the CRI. |
-| DebugContainerCreate | [DebugContainerCreateRequest](#machine.DebugContainerCreateRequest) stream | [DebugContainerCreateResponse](#machine.DebugContainerCreateResponse) stream | DebugContainerCreate |
-| DebugContainerRun | [DebugContainerRunRequest](#machine.DebugContainerRunRequest) stream | [DebugContainerRunResponse](#machine.DebugContainerRunResponse) stream | DebugContainerRun |
+| ImageList | [ImageListRequest](#machine.ImageListRequest) | [ImageListResponse](#machine.ImageListResponse) stream | ImageList lists images in the CRI.
+
+Use ImageService List RPC instead. |
+| ImagePull | [ImagePullRequest](#machine.ImagePullRequest) | [ImagePullResponse](#machine.ImagePullResponse) | ImagePull pulls an image into the CRI.
+
+Use ImageService Pull RPC instead. |
 
  <!-- end services -->
 

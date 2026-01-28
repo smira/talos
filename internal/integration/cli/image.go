@@ -187,6 +187,7 @@ func (suite *ImageSuite) TestPull() {
 
 	suite.RunCLI([]string{"image", "pull", "--nodes", node, image},
 		base.StdoutEmpty(),
+		base.StderrShouldMatch(regexp.MustCompile(regexp.QuoteMeta("pulled image registry.k8s.io/kube-apiserver:v1.27.0"))),
 	)
 
 	// verify that pulled image appeared, also image aliases should appear

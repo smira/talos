@@ -2,7 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-package runtime
+package debug
 
 import (
 	"context"
@@ -11,13 +11,14 @@ import (
 	"syscall"
 
 	containerdapi "github.com/containerd/containerd/v2/client"
+	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
 	"github.com/siderolabs/talos/pkg/machinery/api/machine"
 )
 
-func newGrpcStreamWriter(srv machine.MachineService_DebugContainerRunServer) (
+func newGrpcStreamWriter(srv grpc.BidiStreamingServer[machine.DebugContainerRunRequest, machine.DebugContainerRunResponse]) (
 	*grpcStdioStreamer,
 	io.Reader,
 	io.Writer,
@@ -34,7 +35,7 @@ func newGrpcStreamWriter(srv machine.MachineService_DebugContainerRunServer) (
 }
 
 type grpcStdioStreamer struct {
-	srv machine.MachineService_DebugContainerRunServer
+	srv grpc.BidiStreamingServer[machine.DebugContainerRunRequest, machine.DebugContainerRunResponse]
 
 	stdinW  *io.PipeWriter
 	stdoutR *io.PipeReader
