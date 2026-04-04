@@ -9,9 +9,11 @@ import (
 	"fmt"
 	"io"
 	"io/fs"
+	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"slices"
 
 	"github.com/siderolabs/talos/pkg/machinery/imager/quirks"
 )
@@ -47,7 +49,7 @@ func initramfsPaths(quirks quirks.Quirks) []string {
 //
 // Components which should be placed to the initramfs are moved to the initramfsPath.
 // Ucode components are moved into a separate designated location.
-func (ext *Extension) Compress(ctx context.Context, squashPath, initramfsPath string, quirks quirks.Quirks) (string, error) {
+func (ext *Extension) Compress(ctx context.Context, squashPath, initramfsPath string, quirks quirks.Quirks, xattrsMap map[string]string) (string, error) {
 	if err := ext.handleUcode(initramfsPath, quirks); err != nil {
 		return "", err
 	}
@@ -70,10 +72,70 @@ func (ext *Extension) Compress(ctx context.Context, squashPath, initramfsPath st
 		compressArgs = []string{"-comp", "xz", "-Xdict-size", "100%"}
 	}
 
-	cmd := exec.CommandContext(ctx, "mksquashfs", append([]string{ext.RootfsPath(), squashPath, "-all-root", "-noappend", "-no-progress"}, compressArgs...)...)
+	pseudoFlags, err := ext.xattrPseudoFlags(xattrsMap)
+	if err != nil {
+		return "", err
+	}
+
+	log.Printf("pseudoFlags for extension %q: %q", ext.Directory(), pseudoFlags)
+	log.Printf("args = %q", append(
+		[]string{
+			ext.RootfsPath(),
+			squashPath,
+			"-all-root",
+			"-noappend",
+			"-no-progress",
+			"-no-xattrs",
+		},
+		slices.Concat(compressArgs, pseudoFlags)...,
+	))
+
+	cmd := exec.CommandContext(ctx, "mksquashfs",
+		append(
+			[]string{
+				ext.RootfsPath(),
+				squashPath,
+				"-all-root",
+				"-noappend",
+				"-no-progress",
+				"-no-xattrs",
+			},
+			slices.Concat(compressArgs, pseudoFlags)...,
+		)...)
 	cmd.Stderr = os.Stderr
 
 	return squashPath, cmd.Run()
+}
+
+// xattrPseudoFlags returns a list of pseudo-flag strings for the xattrs of the extension.
+//
+// These pseudo-flags are used to indicate the presence of specific SELinux xattrs on files within the extension.
+// The mksquashfs tool will use that to mark files with xattrs instead of reading it from the filesystem.
+func (ext *Extension) xattrPseudoFlags(xattrsMap map[string]string) ([]string, error) {
+	var flags []string
+
+	if err := filepath.WalkDir(ext.RootfsPath(), func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+
+		log.Printf("encountered path %q, %s, %s", path, d.Type(), d.Name())
+
+		if xattrValue, ok := xattrsMap[path]; ok {
+			relativePath, err := filepath.Rel(ext.RootfsPath(), path)
+			if err != nil {
+				return err
+			}
+
+			flags = append(flags, "-p", fmt.Sprintf("%s x security.selinux=%s", relativePath, xattrValue))
+		}
+
+		return nil
+	}); err != nil {
+		return nil, err
+	}
+
+	return flags, nil
 }
 
 func appendBlob(dst io.Writer, srcPath string) error {

@@ -40,7 +40,7 @@ func UntarGz(ctx context.Context, input io.Reader, rootPath string) error {
 	//nolint:errcheck
 	defer zr.Close()
 
-	err = Untar(ctx, zr, rootPath)
+	err = Untar(ctx, zr, rootPath, nil)
 	if err != nil {
 		return err
 	}

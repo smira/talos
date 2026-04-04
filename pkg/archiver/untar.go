@@ -20,8 +20,11 @@ import (
 
 // Untar extracts .tar archive from r into filesystem under rootPath.
 //
-//nolint:gocyclo
-func Untar(ctx context.Context, r io.Reader, rootPath string) error {
+// If xattrsMap is not nil, it will be filled with paths and their corresponding
+// SELinux xattr values instead of setting the xattrs on the filesystem.
+//
+//nolint:gocyclo,cyclop
+func Untar(ctx context.Context, r io.Reader, rootPath string, xattrsMap map[string]string) error {
 	tr := tar.NewReader(r)
 
 	for {
@@ -88,8 +91,12 @@ func Untar(ctx context.Context, r io.Reader, rootPath string) error {
 		}
 
 		if hdr.PAXRecords["SCHILY.xattr.security.selinux"] != "" {
-			if err = xattr.LSet(path, "security.selinux", []byte(hdr.PAXRecords["SCHILY.xattr.security.selinux"])); err != nil {
-				return fmt.Errorf("error setting selinux xattr for %q: %w", path, err)
+			if xattrsMap != nil {
+				xattrsMap[path] = hdr.PAXRecords["SCHILY.xattr.security.selinux"]
+			} else {
+				if err = xattr.LSet(path, "security.selinux", []byte(hdr.PAXRecords["SCHILY.xattr.security.selinux"])); err != nil {
+					return fmt.Errorf("error setting selinux xattr for %q: %w", path, err)
+				}
 			}
 		}
 	}
